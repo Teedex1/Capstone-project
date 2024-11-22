@@ -59,10 +59,7 @@ A modern, full-stack task management application built with Node.js, Express, Mo
    ```
 
 3. **Environment Setup**
-   - Copy `.env.example` to `.env`
-   ```bash
-   cp .env.example .env
-   ```
+   
    - Update the `.env` file with your configuration:
      ```env
      PORT=5000
