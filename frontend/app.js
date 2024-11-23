@@ -202,6 +202,7 @@ function displayTasks(tasks) {
 
         const taskElement = document.createElement('div');
         taskElement.className = 'task-item priority-' + task.priority.toLowerCase();
+        taskElement.dataset.taskId = task._id;
         taskElement.innerHTML = `
             <div class="task-content">
                 <h3>${task.title}</h3>
@@ -228,6 +229,12 @@ function displayTasks(tasks) {
     });
 }
 
+// Helper function to normalize dates for comparison
+function normalizeDate(date) {
+    const d = new Date(date);
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+
 // Update task statistics
 function updateTaskStats(tasks) {
     const totalTasksElement = document.getElementById('totalTasks');
@@ -239,11 +246,10 @@ function updateTaskStats(tasks) {
     const totalTasks = tasks.length;
     const highPriorityTasks = tasks.filter(task => task.priority === 'High').length;
     
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const today = normalizeDate(new Date());
     const dueTodayTasks = tasks.filter(task => {
-        const taskDate = new Date(task.deadline);
-        return taskDate.toDateString() === today.toDateString();
+        const taskDate = normalizeDate(task.deadline);
+        return taskDate.getTime() === today.getTime();
     }).length;
 
     totalTasksElement.textContent = totalTasks;
@@ -270,11 +276,15 @@ taskForm.addEventListener('submit', async (e) => {
         return;
     }
 
+    // Create date at noon to avoid timezone issues
+    const deadlineDate = new Date(deadline);
+    deadlineDate.setHours(12, 0, 0, 0);
+
     const taskData = {
         title,
         description,
         priority,
-        deadline: new Date(deadline).toISOString()
+        deadline: deadlineDate.toISOString()
     };
 
     try {
@@ -338,13 +348,35 @@ window.handleEditTask = async function(taskId) {
 // Handle task deletion
 window.handleDeleteTask = async function(taskId) {
     if (confirm('Are you sure you want to delete this task?')) {
-        const result = await deleteTask(taskId);
-        
-        if (result.success) {
-            showMessage('Task deleted successfully!');
-            loadTasks();
-        } else {
-            showMessage(result.error, 'error');
+        try {
+            // Remove task from UI immediately
+            const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
+            if (taskElement) {
+                taskElement.style.opacity = '0.5';
+            }
+
+            const result = await deleteTask(taskId);
+            
+            if (result.success) {
+                // Remove task from allTasks array
+                allTasks = allTasks.filter(task => task._id !== taskId);
+                
+                // Update UI
+                const filteredTasks = filterTasks(allTasks);
+                displayTasks(filteredTasks);
+                updateTaskStats(filteredTasks);
+                
+                showMessage('Task deleted successfully!');
+            } else {
+                // Revert UI if deletion failed
+                if (taskElement) {
+                    taskElement.style.opacity = '1';
+                }
+                showMessage(result.error, 'error');
+            }
+        } catch (error) {
+            showMessage('Failed to delete task', 'error');
+            console.error('Delete task error:', error);
         }
     }
 };
