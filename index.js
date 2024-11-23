@@ -21,7 +21,7 @@ app.use(express.static(path.join(__dirname, 'frontend')));
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 
-// Serve index.html for all non-API routes
+// Serve index.html for all non-API routes.
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
 });
