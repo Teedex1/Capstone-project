@@ -4,7 +4,7 @@
   "description": "Task Management Application",
   "main": "server.js",
   "scripts": {
-    "start": "node backend/server.js", 
+    "start": "node backend/server.js",
     "dev": "nodemon backend/server.js"
   },
   "keywords": [],
@@ -19,6 +19,7 @@
     "mongoose": "^7.0.3"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.5.9",
     "nodemon": "^2.0.22"
   }
 }
