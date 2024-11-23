@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:5000/api/tasks";
+const API_BASE = "/api/tasks";
 import { getToken } from './auth.js';
 
 export async function fetchTasks() {
@@ -13,20 +13,17 @@ export async function fetchTasks() {
             "Content-Type": "application/json"
         };
         
-        console.log('Fetch Tasks - Token:', token);
-        console.log('Fetch Tasks - Headers:', headers);
-
         const response = await fetch(API_BASE, {
             method: "GET",
             headers: headers,
         });
 
-        const data = await response.json();
-        
         if (!response.ok) {
+            const data = await response.json().catch(() => ({}));
             throw new Error(data.message || "Failed to fetch tasks");
         }
 
+        const data = await response.json();
         return { success: true, data };
     } catch (error) {
         console.error("Error fetching tasks:", error);
@@ -46,22 +43,18 @@ export async function addTask(task) {
             "Content-Type": "application/json"
         };
 
-        console.log('Add Task - Token:', token);
-        console.log('Add Task - Headers:', headers);
-        console.log('Add Task - Body:', task);
-
         const response = await fetch(API_BASE, {
             method: "POST",
             headers: headers,
-            body: JSON.stringify(task),
+            body: JSON.stringify(task)
         });
 
-        const data = await response.json();
-
         if (!response.ok) {
+            const data = await response.json().catch(() => ({}));
             throw new Error(data.message || "Failed to add task");
         }
 
+        const data = await response.json();
         return { success: true, data };
     } catch (error) {
         console.error("Error adding task:", error);
@@ -81,16 +74,13 @@ export async function deleteTask(taskId) {
             "Content-Type": "application/json"
         };
 
-        console.log('Delete Task - Token:', token);
-        console.log('Delete Task - Headers:', headers);
-
         const response = await fetch(`${API_BASE}/${taskId}`, {
             method: "DELETE",
-            headers: headers,
+            headers: headers
         });
 
         if (!response.ok) {
-            const data = await response.json();
+            const data = await response.json().catch(() => ({}));
             throw new Error(data.message || "Failed to delete task");
         }
 
@@ -101,7 +91,8 @@ export async function deleteTask(taskId) {
     }
 }
 
-export async function updateTask(taskId, updates) {
+// Update an existing task
+export async function updateTask(taskId, taskData) {
     const token = getToken();
     if (!token) {
         return { success: false, error: "No authentication token found" };
@@ -113,22 +104,18 @@ export async function updateTask(taskId, updates) {
             "Content-Type": "application/json"
         };
 
-        console.log('Update Task - Token:', token);
-        console.log('Update Task - Headers:', headers);
-        console.log('Update Task - Body:', updates);
-
         const response = await fetch(`${API_BASE}/${taskId}`, {
             method: "PUT",
             headers: headers,
-            body: JSON.stringify(updates),
+            body: JSON.stringify(taskData)
         });
 
-        const data = await response.json();
-
         if (!response.ok) {
+            const data = await response.json().catch(() => ({}));
             throw new Error(data.message || "Failed to update task");
         }
 
+        const data = await response.json();
         return { success: true, data };
     } catch (error) {
         console.error("Error updating task:", error);

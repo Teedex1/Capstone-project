@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const path = require("path");
 const authRoutes = require("./backend/routes/authRoutes");
 const taskRoutes = require("./backend/routes/taskRoutes");
 
@@ -13,17 +14,17 @@ const app = express();
 app.use(express.json()); // Parse JSON payloads
 app.use(cors()); // Enable Cross-Origin Resource Sharing
 
-// Default Route
-app.get("/", (req, res) => {
-    res.send("Welcome to the Task Management API!");
-});
+// Serve static files from frontend directory
+app.use(express.static(path.join(__dirname, 'frontend')));
 
-// Routes
+// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 
-app.use("./api/tasks", taskRoutes);
-
+// Serve index.html for all non-API routes
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+});
 
 // Database Connection
 mongoose
@@ -33,8 +34,9 @@ mongoose
     })
     .then(() => {
         console.log("Connected to MongoDB");
-        app.listen(process.env.PORT || 5000, () => {
-            console.log(`Server running on port ${process.env.PORT || 5000}`);
+        const PORT = process.env.PORT || 3000;
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
         });
     })
     .catch((err) => {

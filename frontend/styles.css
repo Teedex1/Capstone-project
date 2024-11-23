@@ -194,6 +194,166 @@ body {
     font-size: 0.9rem;
 }
 
+/* Filter Controls */
+.filter-container {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: var(--surface-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filter-container {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.filter-select {
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    min-width: 120px;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.1);
+}
+
+.filter-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.filter-controls select,
+.filter-controls input[type="date"] {
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--input-bg);
+    color: var(--text-color);
+    min-width: 150px;
+}
+
+.btn-clear-filters {
+    padding: 0.5rem 1rem;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-clear-filters:hover {
+    background: var(--hover-color);
+}
+
+/* Task Items */
+.task-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: var(--surface-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid transparent;
+}
+
+.task-content {
+    flex: 1;
+}
+
+.task-meta {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.task-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.btn-delete,
+.btn-edit {
+    padding: 0.5rem;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    min-height: 32px;
+}
+
+.btn-delete {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #dc2626;
+    transform: translateY(-2px);
+    opacity: 0.95;
+}
+
+.btn-edit {
+    background-color: var(--warning-color);
+    color: white;
+}
+
+.btn-edit:hover {
+    background-color: #d97706;
+    transform: translateY(-2px);
+    opacity: 0.95;
+}
+
+.btn-delete i,
+.btn-edit i {
+    font-size: 1rem;
+    pointer-events: none;
+}
+
+/* Priority Colors */
+.priority-high {
+    border-left-color: var(--error-color);
+}
+
+.priority-medium {
+    border-left-color: var(--warning-color);
+}
+
+.priority-low {
+    border-left-color: var(--success-color);
+}
+
+/* Task Form in Edit Mode */
+.task-form.editing {
+    background: var(--surface-color);
+    border: 1px solid var(--accent-color);
+}
+
+.task-form.editing button[type="submit"] {
+    background: var(--accent-color);
+}
+
 /* Scrollbar Styles */
 ::-webkit-scrollbar {
     width: 8px;
@@ -699,4 +859,70 @@ input:focus, textarea:focus, select:focus {
     gap: 0.5rem;
     margin: 0;
     font-size: 1.5rem;
+}
+
+/* Search Bar Styles */
+.search-container {
+    margin: 1rem 0 2rem 0;
+    padding: 0 2rem;
+}
+
+.search-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--input-bg);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 0.5rem 1rem;
+    transition: var(--transition);
+}
+
+.search-bar:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.search-icon {
+    color: var(--text-color);
+    opacity: 0.5;
+    margin-right: 0.5rem;
+}
+
+#taskSearch {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1rem;
+    padding: 0.5rem;
+    outline: none;
+}
+
+#taskSearch::placeholder {
+    color: var(--text-color);
+    opacity: 0.5;
+}
+
+.clear-search {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    opacity: 0.5;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.clear-search:hover {
+    opacity: 1;
+}
+
+/* Hide clear button when search is empty */
+.search-bar:not(:focus-within) .clear-search:not(:hover) {
+    opacity: 0;
+    visibility: hidden;
 }
