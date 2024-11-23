@@ -4,7 +4,7 @@
   "description": "Task Management Application",
   "main": "server.js",
   "scripts": {
-    "start": "node backend/server.js", // changed
+    "start": "node backend/server.js", 
     "dev": "nodemon backend/server.js"
   },
   "keywords": [],
