@@ -122,7 +122,7 @@ async function loadTasks() {
     }
 }
 
-// Filter tasks based on search and priority
+// Filter tasks based on search and priority 
 function filterTasks(tasks) {
     if (!tasks) return [];
     
