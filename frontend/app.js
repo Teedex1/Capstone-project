@@ -370,4 +370,4 @@ setInterval(async () => {
             showMessage('Session expired. Please login again.', 'error');
         }
     }
-}, 300000); // Check every 5 minutes
+}, 3000); // Check every 5 minutes
