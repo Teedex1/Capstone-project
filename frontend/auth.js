@@ -1,4 +1,4 @@
-const API_AUTH_BASE = "https://capstone-project-f0jquw.fly.dev/api/auth";
+const API_AUTH_BASE = "https://task-management-dawn-resonance-5917.fly.dev/api/auth";
 
 export function saveToken(token) {
     if (!token) {
