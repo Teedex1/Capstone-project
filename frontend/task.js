@@ -1,4 +1,4 @@
-const API_BASE = "/api/tasks";
+const API_BASE = "https://capstone-project-f0jquw.fly.dev/api/tasks";
 import { getToken } from './auth.js';
 
 export async function fetchTasks() {
