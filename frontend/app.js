@@ -1,5 +1,6 @@
 import { loginUser, registerUser, getToken, clearToken, checkAndRefreshToken } from './auth.js';
 import { fetchTasks, addTask, deleteTask, updateTask } from './task.js';
+import { sanitizeInput, validateTaskInput, validateUserInput } from './utils/security.js';
 
 // UI Elements
 const loginForm = document.getElementById('loginForm');
@@ -64,19 +65,29 @@ showLoginLink.addEventListener('click', (e) => {
 registerForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const username = document.getElementById('registerUsername').value;
-    const email = document.getElementById('registerEmail').value;
+    const username = document.getElementById('registerUsername').value.trim();
+    const email = document.getElementById('registerEmail').value.trim();
     const password = document.getElementById('registerPassword').value;
-    
-    const result = await registerUser(username, email, password);
-    
-    if (result.success) {
-        showMessage('Registration successful! Please log in.');
-        registerForm.style.display = 'none';
-        loginForm.style.display = 'block';
-        registerForm.reset();
-    } else {
-        showMessage(result.error, 'error');
+
+    // Validate user input
+    const validation = validateUserInput(username, email, password);
+    if (!validation.isValid) {
+        showMessage(validation.errors[0], 'error');
+        return;
+    }
+
+    try {
+        const result = await registerUser(username, email, password);
+        if (result.success) {
+            showMessage('Registration successful! Please log in.');
+            registerForm.style.display = 'none';
+            loginForm.style.display = 'block';
+            registerForm.reset();
+        } else {
+            showMessage(result.error, 'error');
+        }
+    } catch (error) {
+        showMessage('Registration failed: ' + error.message, 'error');
     }
 });
 
@@ -196,16 +207,21 @@ function displayTasks(tasks) {
         const date = new Date(task.deadline);
         const formattedDate = formatDateToWAT(date);
 
+        // Sanitize task data before display
+        const safeTitle = sanitizeInput(task.title);
+        const safeDescription = sanitizeInput(task.description);
+        const safePriority = sanitizeInput(task.priority);
+
         const taskElement = document.createElement('div');
-        taskElement.className = 'task-item priority-' + task.priority.toLowerCase();
+        taskElement.className = 'task-item priority-' + safePriority.toLowerCase();
         taskElement.dataset.taskId = task._id;
         taskElement.innerHTML = `
             <div class="task-content">
-                <h3>${task.title}</h3>
-                <p>${task.description}</p>
+                <h3>${safeTitle}</h3>
+                <p>${safeDescription}</p>
                 <div class="task-meta">
                     <span class="task-priority">
-                        <i class="fas fa-flag"></i> ${task.priority}
+                        <i class="fas fa-flag"></i> ${safePriority}
                     </span>
                     <span class="task-deadline">
                         <i class="fas fa-calendar"></i> ${formattedDate}
@@ -282,13 +298,10 @@ taskForm.addEventListener('submit', async (e) => {
     const priority = document.getElementById('taskPriority').value;
     const deadline = document.getElementById('taskDeadline').value;
 
-    if (!title) {
-        showMessage('Task title is required', 'error');
-        return;
-    }
-
-    if (!deadline) {
-        showMessage('Deadline is required', 'error');
+    // Validate input
+    const validation = validateTaskInput(title, description, priority, deadline);
+    if (!validation.isValid) {
+        showMessage(validation.errors[0], 'error');
         return;
     }
 
@@ -296,8 +309,8 @@ taskForm.addEventListener('submit', async (e) => {
     const deadlineDate = createLocalDate(deadline);
 
     const taskData = {
-        title,
-        description,
+        title: sanitizeInput(title),
+        description: sanitizeInput(description),
         priority,
         deadline: deadlineDate.toISOString()
     };
