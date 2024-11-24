@@ -417,6 +417,146 @@ body {
     }
 }
 
+/* Mobile Responsiveness */
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 0.5rem;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+        padding: 0 0.5rem;
+    }
+
+    .task-manager-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .task-controls {
+        padding: 1rem;
+    }
+
+    .task-controls form {
+        padding-right: 0;
+    }
+
+    .form-group {
+        margin-bottom: 0.8rem;
+    }
+
+    input, textarea, select {
+        padding: 0.6rem;
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+
+    .task-list {
+        padding: 0;
+    }
+
+    .task-list .panel-header {
+        padding: 1rem;
+    }
+
+    .tasks-container {
+        padding: 0.5rem;
+    }
+
+    .task-item {
+        padding: 0.8rem;
+        margin-bottom: 0.8rem;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+
+    .task-item h3 {
+        font-size: 1rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .task-item p {
+        font-size: 0.9rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .task-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .task-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+
+    .filter-container {
+        padding: 0.8rem;
+        margin: 0.5rem 0;
+    }
+
+    .search-container {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .search-container input,
+    .search-container select {
+        width: 100%;
+    }
+
+    /* Prevent horizontal scroll */
+    body {
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    /* Make sure all containers respect viewport width */
+    .container,
+    .task-controls,
+    .task-list,
+    .task-item,
+    .form-group,
+    input,
+    textarea,
+    select {
+        max-width: 100vw;
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+/* Additional fixes for very small screens */
+@media screen and (max-width: 380px) {
+    .container {
+        padding: 0.3rem;
+    }
+
+    .task-controls,
+    .task-list {
+        padding: 0.8rem;
+    }
+
+    .btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.85rem;
+    }
+}
+
 /* Theme Toggle */
 .theme-controls {
     position: fixed;
