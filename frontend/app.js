@@ -232,7 +232,21 @@ function displayTasks(tasks) {
 // Helper function to normalize dates for comparison
 function normalizeDate(date) {
     const d = new Date(date);
-    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    // Get the local date components
+    const year = d.getFullYear();
+    const month = d.getMonth();
+    const day = d.getDate();
+    // Create a new date using local components at midnight UTC
+    const normalized = new Date(Date.UTC(year, month, day));
+    return normalized;
+}
+
+// Helper function to create a date in local timezone
+function createLocalDate(dateString) {
+    const d = new Date(dateString);
+    // Convert to local timezone at noon
+    const localDate = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12, 0, 0, 0);
+    return localDate;
 }
 
 // Update task statistics
@@ -276,9 +290,8 @@ taskForm.addEventListener('submit', async (e) => {
         return;
     }
 
-    // Create date at noon to avoid timezone issues
-    const deadlineDate = new Date(deadline);
-    deadlineDate.setHours(12, 0, 0, 0);
+    // Create date in local timezone
+    const deadlineDate = createLocalDate(deadline);
 
     const taskData = {
         title,
@@ -331,8 +344,8 @@ window.handleEditTask = async function(taskId) {
     currentEditingTask = task;
     
     // Format the date for the input field (YYYY-MM-DD)
-    const date = new Date(task.deadline);
-    const formattedDate = date.toISOString().split('T')[0];
+    const taskDate = new Date(task.deadline);
+    const formattedDate = taskDate.toLocaleDateString('en-CA'); // This format is YYYY-MM-DD
     
     document.getElementById('taskTitle').value = task.title;
     document.getElementById('taskDescription').value = task.description;
