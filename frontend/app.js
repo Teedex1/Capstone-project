@@ -194,11 +194,7 @@ function displayTasks(tasks) {
 
     tasks.forEach(task => {
         const date = new Date(task.deadline);
-        const formattedDate = date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        });
+        const formattedDate = formatDateToWAT(date);
 
         const taskElement = document.createElement('div');
         taskElement.className = 'task-item priority-' + task.priority.toLowerCase();
@@ -231,22 +227,28 @@ function displayTasks(tasks) {
 
 // Helper function to normalize dates for comparison
 function normalizeDate(date) {
+    // Create date in WAT (Nigeria timezone)
     const d = new Date(date);
-    // Get the local date components
-    const year = d.getFullYear();
-    const month = d.getMonth();
-    const day = d.getDate();
-    // Create a new date using local components at midnight UTC
-    const normalized = new Date(Date.UTC(year, month, day));
-    return normalized;
+    const watOptions = { timeZone: 'Africa/Lagos' };
+    const watDate = new Date(d.toLocaleString('en-US', watOptions));
+    return new Date(watDate.getFullYear(), watDate.getMonth(), watDate.getDate());
 }
 
-// Helper function to create a date in local timezone
+// Helper function to create a date in WAT timezone
 function createLocalDate(dateString) {
+    // Parse the date in WAT
     const d = new Date(dateString);
-    // Convert to local timezone at noon
-    const localDate = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12, 0, 0, 0);
-    return localDate;
+    const watOptions = { timeZone: 'Africa/Lagos' };
+    const watDate = new Date(d.toLocaleString('en-US', watOptions));
+    // Set to noon WAT
+    return new Date(watDate.getFullYear(), watDate.getMonth(), watDate.getDate(), 12, 0, 0, 0);
+}
+
+// Format date to YYYY-MM-DD in WAT
+function formatDateToWAT(date) {
+    const watOptions = { timeZone: 'Africa/Lagos' };
+    const watDate = new Date(date.toLocaleString('en-US', watOptions));
+    return watDate.toLocaleDateString('en-CA'); // en-CA gives YYYY-MM-DD format
 }
 
 // Update task statistics
@@ -290,7 +292,7 @@ taskForm.addEventListener('submit', async (e) => {
         return;
     }
 
-    // Create date in local timezone
+    // Create date in WAT timezone
     const deadlineDate = createLocalDate(deadline);
 
     const taskData = {
@@ -345,7 +347,7 @@ window.handleEditTask = async function(taskId) {
     
     // Format the date for the input field (YYYY-MM-DD)
     const taskDate = new Date(task.deadline);
-    const formattedDate = taskDate.toLocaleDateString('en-CA'); // This format is YYYY-MM-DD
+    const formattedDate = formatDateToWAT(taskDate);
     
     document.getElementById('taskTitle').value = task.title;
     document.getElementById('taskDescription').value = task.description;
